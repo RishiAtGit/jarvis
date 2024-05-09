@@ -8,9 +8,7 @@ $(document).ready(function () {
         out: {
             effect: "bounceOut",
         },
-
     });
-
     // Siri configuration
     var siriWave = new SiriWave({
         container: document.getElementById("siri-container"),
@@ -21,7 +19,6 @@ $(document).ready(function () {
         speed: "0.30",
         autostart: true
       });
-
     // Siri message animation
     $('.siri-message').textillate({
         loop: true,
@@ -34,6 +31,15 @@ $(document).ready(function () {
             effect: "fadeOutUp",
             sync: true,
         },
+
+    });
+
+    // mic button click event
+
+    $("#MicBtn").click(function () { 
+        eel.playAssistantSound()
+        $("#Oval").attr("hidden", true);
+        $("#SiriWave").attr("hidden", false);
 
     });
 
