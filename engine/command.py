@@ -1,8 +1,10 @@
+
 import pyttsx3
 import speech_recognition as sr
 import eel
 import time
 def speak(text):
+    text = str(text)
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices') 
     engine.setProperty('voice', voices[0].id)
@@ -75,7 +77,8 @@ def allCommands(message=1):
                     
                 whatsApp(contact_no, query, flag, name)
         else:
-            print("not run")
+            from engine.features import chatBot
+            chatBot(query)
     except:
         print("error")
     
