@@ -1,5 +1,8 @@
-
+import datetime
+import os
+from bs4 import BeautifulSoup
 import pyttsx3
+import requests
 import speech_recognition as sr
 import eel
 import time
@@ -53,11 +56,12 @@ def allCommands(message=1):
     try:
 
         if "open" in query:
-            from engine.features import openCommand
-            openCommand(query)
+           from engine.features import openCommand
+           openCommand(query)               
+        
         elif "on youtube" in query:
             from engine.features import PlayYoutube
-            PlayYoutube(query)
+            PlayYoutube(query) 
         
         elif "send message" in query or "phone call" in query or "video call" in query:
             from engine.features import findContact, whatsApp
@@ -76,9 +80,43 @@ def allCommands(message=1):
                     flag = 'video call'
                     
                 whatsApp(contact_no, query, flag, name)
+                
+        elif "the time" in query:
+            hour = datetime.datetime.now().strftime("%H")
+            min = datetime.datetime.now().strftime("%M")
+            speak(f"Sir time is {hour} bajjke {min} minute")
+
+        elif "google" in query:
+            from engine.features import searchGoogle
+            searchGoogle(query)
+
+        elif "youtube" in query:
+            from engine.features import searchYoutube
+            searchYoutube(query)
+        
+        elif "wikipedia" in query:
+            from engine.features import searchWikipedia
+            searchWikipedia(query)
+
+        elif "temperature" in query:
+            search = "temperature in bokaro"
+            url = f"https://www.google.com/search?q={search}"
+            r  = requests.get(url)
+            data = BeautifulSoup(r.text,"html.parser")
+            temp = data.find("div", class_ = "BNeawe").text
+            speak(f"current{search} is {temp}")
+        elif "weather" in query:
+            search = "weather in bokaro"
+            url = f"https://www.google.com/search?q={search}"
+            r  = requests.get(url)
+            data = BeautifulSoup(r.text,"html.parser")
+            temp = data.find("div", class_ = "BNeawe").text
+            speak(f"current{search} is {temp}")
+        
         else:
             from engine.features import chatBot
             chatBot(query)
+
     except:
         print("error")
     
