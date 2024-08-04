@@ -10,7 +10,7 @@ from playsound import playsound
 import eel
 import pyaudio
 import pyautogui
-from engine.command import speak
+from engine.command import speak , takecommand
 from engine.config import ASSISTANT_NAME
 # Playing assiatnt sound function
 import pywhatkit as kit
@@ -172,17 +172,6 @@ def whatsApp(mobile_no, message, flag, name):
     pyautogui.hotkey('enter')
     speak(jarvis_message)
 
-# chat bot 
-def chatBot(query):
-    user_input = query.lower()
-    chatbot = hugchat.ChatBot(cookie_path="engine\cookies.json")
-    id = chatbot.new_conversation()
-    chatbot.change_conversation(id)
-    response =  chatbot.chat(user_input)
-    print(response)
-    speak(response)
-    return response
-
 def searchGoogle(query):
     if "google" in query:
         import wikipedia as googleScrap
@@ -220,3 +209,13 @@ def searchWikipedia(query):
         speak("According to wikipedia..")
         print(results)
         speak(results)
+
+def chatBot(query):
+    user_input = query.lower()
+    chatbot = hugchat.ChatBot(cookie_path="engine\cookies.json")
+    id = chatbot.new_conversation()
+    chatbot.change_conversation(id)
+    response =  chatbot.chat(user_input)
+    print(response)
+    speak(response)
+    return response

@@ -1,11 +1,14 @@
 import datetime
+import json
 import os
+import random
 from bs4 import BeautifulSoup
 import pyttsx3
 import requests
 import speech_recognition as sr
 import eel
 import time
+import speedtest
 def speak(text):
     text = str(text)
     engine = pyttsx3.init('sapi5')
@@ -85,6 +88,7 @@ def allCommands(message=1):
             hour = datetime.datetime.now().strftime("%H")
             min = datetime.datetime.now().strftime("%M")
             speak(f"Sir time is {hour} bajjke {min} minute")
+        
 
         elif "google" in query:
             from engine.features import searchGoogle
@@ -113,6 +117,105 @@ def allCommands(message=1):
             temp = data.find("div", class_ = "BNeawe").text
             speak(f"current{search} is {temp}")
         
+        elif "news" in query:
+            api_dict = {"business" : "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=e74d5cf32fd14525b354918e6b1bdd98",
+            "entertainment" : "https://newsapi.org/v2/top-headlines?country=in&category=entertainment&apiKey=e74d5cf32fd14525b354918e6b1bdd98",
+            "health" : "https://newsapi.org/v2/top-headlines?country=in&category=health&apiKey=e74d5cf32fd14525b354918e6b1bdd98",
+            "science" :"https://newsapi.org/v2/top-headlines?country=in&category=science&apiKey=e74d5cf32fd14525b354918e6b1bdd98",
+            "sports" :"https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=e74d5cf32fd14525b354918e6b1bdd98",
+            "technology" :"https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=e74d5cf32fd14525b354918e6b1bdd98"
+          }
+
+            content = None
+            url = None
+            speak("Which field news do you want, [business] , [health] , [technology], [sports] , [entertainment] , [science]")
+            field = takecommand()
+            for key ,value in api_dict.items():
+                if key.lower() in field.lower():
+                    url = value
+                    print(url)
+                    print("url was found")
+                    break
+                else:
+                    url = True
+            if url is True:
+                print("url not found")
+
+            news = requests.get(url).text
+            news = json.loads(news)
+            speak("Here is the news.")
+
+            arti = news["articles"]
+            for articles in arti :
+                article = articles["title"]
+                print(article)
+                speak(article)
+                news_url = articles["url"]
+                print(f"for more info visit: {news_url}")
+
+        elif "internet speed" in query:
+                    wifi  = speedtest.Speedtest()
+                    upload_net = wifi.upload()/1048576
+                    download_net = wifi.download()/1048576
+                    print("Wifi Upload Speed is", upload_net)
+                    print("Wifi download speed is ",download_net)
+                    speak(f"Wifi download speed is {download_net}")
+                    speak(f"Wifi Upload speed is {upload_net}")
+        
+        
+        elif "play game" in query:
+            speak("Lets Play ROCK PAPER SCISSORS !!")
+            print("LETS PLAYYYYYYYYYYYYYY")
+            i = 0
+            Me_score = 0
+            Com_score = 0
+            while(i<5):
+                choose = ("rock","paper","scissors") #Tuple
+                com_choose = random.choice(choose)
+                query = takecommand().lower()
+                if (query == "rock"):
+                    if (com_choose == "rock"):
+                        speak("ROCK")
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                    elif (com_choose == "paper"):
+                        speak("paper")
+                        Com_score += 1
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                    else:
+                        speak("Scissors")
+                        Me_score += 1
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+
+                elif (query == "paper" ):
+                    if (com_choose == "rock"):
+                        speak("ROCK")
+                        Me_score += 1
+                        print(f"Score:- ME :- {Me_score+1} : COM :- {Com_score}")
+
+                    elif (com_choose == "paper"):
+                        speak("paper")
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                    else:
+                        speak("Scissors")
+                        Com_score += 1
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+
+                elif (query == "scissors" or query == "scissor"):
+                    if (com_choose == "rock"):
+                        speak("ROCK")
+                        Com_score += 1
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                    elif (com_choose == "paper"):
+                        speak("paper")
+                        Me_score += 1
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                    else:
+                        speak("Scissors")
+                        print(f"Score:- ME :- {Me_score} : COM :- {Com_score}")
+                i += 1
+
+            print(f"FINAL SCORE :- ME :- {Me_score} : COM :- {Com_score}")
+
         else:
             from engine.features import chatBot
             chatBot(query)
